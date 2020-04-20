@@ -1,7 +1,7 @@
 Numeric News
 ============
 
-Iscriviti alla mailing list di Numeric News per sapere quando aprira' al pubblico: mailing list
+Iscriviti alla mailing list di Numeric News per sapere quando aprira' al pubblico: [mailing list](https://groups.google.com/forum/#!forum/numeric-news-rss)
 
 Cosa sara' Numeric News?
 
@@ -21,7 +21,7 @@ NumericNews.net vuole dare ai programmatori e scienziati, chi lavora giornalment
 
 - Tag per categorizzare e raggruppare le notizie.  
 
-- Citazione delle fonti: l'autore della notizia linka i siti da dove ha preso i dati. Ad esempio, COVID-19 Protezione Civile
+- Citazione delle fonti: l'autore della notizia linka i siti da dove ha preso i dati. Ad esempio, [COVID-19 Protezione Civile](https://github.com/pcm-dpc/COVID-19)
 
 
 
