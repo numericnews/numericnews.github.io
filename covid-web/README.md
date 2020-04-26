@@ -7,7 +7,7 @@ totaleCasi.ts
 
 generalPlot() crea il plot dei "totale casi" e delle velocita' dei totale casi. La velocita' e' il numero di nuovi casi.  
 generalPlotGrowthRate() crea il plot del growth rate.  
-projectGeneralPlot() crea il plot della proiezione basata sul growth rate. Esempio di invocazione:
+projectGeneralPlot() crea il plot della proiezione basata sul growth rate.
 
 tamponi.ts
 ----------
