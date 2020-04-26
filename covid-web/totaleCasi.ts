@@ -181,6 +181,12 @@ export interface IGeneralPlot {
     options: { ["citta"]: { color: string, strokePattern?: number[] } }
 }
 
+/*
+    selectedProvincesLength: numero di province/regioni nel plot basePlot,
+    basePlot: l'output di generalPlot,
+    grPlot: l'output di generalPlotGrowthRate,
+    startDate: data da cui iniziare la proiezione
+ */
 export async function projectGeneralPlot(
     selectedProvincesLength: number,
     basePlot: IGeneralPlot, growthRatePlot: IGeneralPlot, startDate: Date = null) {

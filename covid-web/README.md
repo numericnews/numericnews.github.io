@@ -5,3 +5,21 @@ Tuttavia, i calcoli fatti sono abbastanza semplici. La cosa meno leggibile e' il
 Il codice per il calcolo dell'r0 e' deprecato. Il paper a cui faceva riferimento vale solo per la nave crociera che era stata messa in quarantena in Giappone.  
 
 index.ts e index.sh e' utilizzato per testare il codice in maniera spicciola. 
+
+totaleCasi.ts
+-------------
+
+generalPlot() crea il plot dei "totale casi" e delle velocita' dei totale casi. La velocita' e' il numero di nuovi casi.  
+generalPlotGrowthRate() crea il plot del growth rate.  
+projectGeneralPlot() crea il plot della proiezione basata sul growth rate. Esempio di invocazione:
+
+tamponi.ts
+----------
+
+testsPlot() crea il plot dei tamponi/casi\_testati. Il plot risultate e' composto da due serie: quella dei nuovi tamponi giornalieri e quella della percentuale dei tamponi positivi. 
+Cerca di usare il campo casi\_testati del json della Protezione Civile piuttosto che il campo "tamponi".
+
+download-data.ts
+----------------
+
+Scarica i dati dal github della protezione civile.
