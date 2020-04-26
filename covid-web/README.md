@@ -29,7 +29,7 @@ GViZ
 ----
 
 plot[i][j] si riferisce all'ordinata della serie (j+1)-esima, nell'ascissa (i+1)-esima.  
-Nel caso del plot "totale casi" (generalPlot), plot[i][0] e' la data, plot[i][1] e' il totale casi della prima provincia, plot[i][2] e' la velocita' della prima provincia. Ogni riga i e' cosi': [data, prov1, vel1, prov2, vel2, ...]. Lo stesso vale per le regioni.  
+Nel caso del plot "totale casi" (generalPlot), plot[i][0] e' la data, plot[i][1] e' il totale casi della prima provincia, plot[i][2] e' la velocita' della prima provincia. Ogni riga i e' cosi': [data, totale provincia 1, velocita' provincia 1, totale provincia 2, velocita' provincia 2, ...]. Lo stesso vale per le regioni.  
 plot[0] e' una lista che contiene la descrizione delle serie: nome serie, id serie, tipo serie.
 
 index.ts e index.sh
