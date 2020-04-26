@@ -4,7 +4,6 @@ const provinces_1 = require("./provinces");
 const moment = require("moment");
 const randomcolor = require("randomcolor");
 exports.Provinces = provinces_1.Provinces;
-exports.Provinces.sort((a, b) => moment(a.data).diff(moment(b.data), 'seconds'));
 const colorSeed = 1;
 function filter(field, prov, p) {
     if (prov.toLowerCase() == "italia")

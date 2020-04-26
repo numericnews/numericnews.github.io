@@ -1,5 +1,6 @@
 import  Axios  from 'axios'
 import { delay } from './utils'
+import * as moment from 'moment'
 
 
 export class DownloadData {
@@ -9,13 +10,20 @@ export class DownloadData {
     list: any[]
     url: string
     filter: (p) => boolean
+    postDownload: () => Promise<void>
 
-    constructor(list: any[], url: string, filter: (p) => boolean) {
+    constructor(
+        list: any[],
+        url: string,
+        filter: (p) => boolean,
+        postDownload: () => Promise<void>,
+    ) {
         this.initializing = false
         this.initialized = false
         this.list = list
         this.url = url
         this.filter = filter
+        this.postDownload = postDownload
     }
 
     async init() {
@@ -39,6 +47,8 @@ export class DownloadData {
             if (this.filter(p))
                 list.push(p)
         }
+
+        await this.postDownload()
 
         this.initialized = true
         this.initializing = false

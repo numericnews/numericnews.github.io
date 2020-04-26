@@ -26,8 +26,6 @@ export interface IProvince {
 
 export const Provinces: IProvince[] = ProtCivProvinces
 
-Provinces.sort((a, b) => moment(a.data).diff(moment(b.data), 'seconds'))
-
 const colorSeed = 1
 
 // Filter used to select particular provinces or regions (field = denominazione_provincia or denominazione_regione)

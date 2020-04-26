@@ -8,18 +8,14 @@ const url = "https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-json
 const downloadData = new DownloadData(
     Regions,
     url, 
-    p => true
+    p => true,
+    async () => { 
+        Regions.sort((a, b) => moment(a.data).diff(moment(b.data), 'seconds'))
+    }
 )
-
-let sorted = false
 
 export async function init() {
 
     await downloadData.init()
-
-    if (!sorted) {
-        Regions.sort((a, b) => moment(a.data).diff(moment(b.data), 'seconds'))
-        sorted = true
-    }
 
 }

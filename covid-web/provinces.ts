@@ -1,5 +1,6 @@
 import { DownloadData } from "./download-data"
 import { max2Any } from "./utils"
+import * as moment from 'moment'
 
 export let Provinces = []
 
@@ -8,7 +9,10 @@ const url = "https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-json
 const downloadData = new DownloadData(
     Provinces,
     url, 
-    p => true
+    p => true,
+    async () => {
+        Provinces.sort((a, b) => moment(a.data).diff(moment(b.data), 'seconds'))
+    }
 )
 
 export async function init() {
