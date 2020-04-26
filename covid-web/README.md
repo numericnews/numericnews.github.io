@@ -1,6 +1,6 @@
 Questo codice e' stato scritto nei ritagli del mio tempo libero e anche con una certa premura di rendere il prima possibile accessibile i grafi sul sito [Numeric News](https://numericnews.github.io/). 
 Quindi, il codice non e' per niente ottimizzato. Inoltre, deve essere documentato meglio.  
-Tuttavia, i calcoli fatti sono abbastanza semplici. La cosa meno leggibile e' il codice che gestisce i plot in formato [GViZ](https://developers.google.com/chart/interactive/docs/reference?csw=1#DataTable). 
+Tuttavia, i calcoli fatti sono abbastanza semplici. La cosa meno leggibile e' il codice che gestisce i plot in formato [GViZ](https://developers.google.com/chart/interactive/docs/reference?csw=1#DataTable). La data-table di GViZ non e' molto maneggiabile.
 
 totaleCasi.ts
 -------------
