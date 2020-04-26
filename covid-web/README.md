@@ -12,7 +12,7 @@ projectGeneralPlot() crea il plot della proiezione basata sul growth rate.
 tamponi.ts
 ----------
 
-testsPlot() crea il plot dei tamponi/casi\_testati. Il plot risultate e' composto da due serie: quella dei nuovi tamponi giornalieri e quella della percentuale dei tamponi positivi. 
+testsPlot() crea il plot dei tamponi/casi\_testati. Il plot risultante e' composto da due serie: quella dei nuovi tamponi giornalieri e quella della percentuale dei tamponi positivi. 
 Cerca di usare il campo casi\_testati del json della Protezione Civile piuttosto che il campo "tamponi".
 
 download-data.ts
