@@ -1,0 +1,21 @@
+{
+	"compilerOptions": {
+		"target": "es2018",
+        "lib": ["es2018"],
+		"module": "commonjs",
+		"removeComments": true,
+		"noImplicitUseStrict": true,
+		"sourceMap": true
+	},
+	"include": [
+		"**/*.ts"
+	],
+	"exclude": [
+		"node_modules"
+	],
+	"linterOptions": {
+		"exclude": [
+			"node_modules/**/*.{j,t}s"
+		]
+	}
+}

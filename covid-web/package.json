@@ -1,0 +1,28 @@
+{
+  "name": "covid-web",
+  "version": "1.1.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@types/axios": "^0.14.0",
+    "axios": "^0.19.2",
+    "dygraphs": "https://github.com/Alpt/dygraphs.git#v0.0.5",
+    "lodash": "^4.17.15",
+    "moment": "^2.24.0",
+    "percentile": "^1.2.3",
+    "randomcolor": "^0.5.4"
+  },
+  "devDependencies": {
+    "@types/lodash": "^4.14.145",
+    "@types/moment": "^2.13.0",
+    "@types/node": "^10.17.15",
+    "@types/typescript": "^2.0.0",
+    "tslint": "^5.20.1",
+    "typescript": "^3.7.2"
+  }
+}

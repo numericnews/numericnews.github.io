@@ -1,0 +1,7 @@
+{
+    // "extends": "tslint:recommended",
+    "rules": {
+        // https://www.meziantou.net/detect-missing-await-in-typescript.htm 
+        "no-floating-promises": true
+    }
+}

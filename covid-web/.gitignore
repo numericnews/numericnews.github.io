@@ -1,0 +1,8 @@
+/node_modules/
+/log
+/logs
+/index.html
+/dygraphs/
+/.Rhistory
+/.RData
+/.git
