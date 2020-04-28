@@ -1,13 +1,16 @@
 
 import * as _ from 'lodash'
 
-import { Provinces as ProtCivProvinces } from './provinces'
+import { Provinces as ProtCivProvinces, init as initProvinces, provincesToRegions } from './provinces'
+import { IRegion, init as initRegions, Regions } from './regions'
 import moment = require('moment')
 
 import randomcolor = require('randomcolor')
 import Dygraph from 'dygraphs';
 import { AssertionError } from 'assert';
 import { IR0, IAllR0 } from './r0';
+
+import { average, max2 } from './analyze'
 
 export interface IProvince {
     "data": string,
@@ -90,7 +93,15 @@ export async function plotR0(field: 'denominazione_provincia' | 'denominazione_r
 }
      */
 
-export async function generalPlot(field: 'denominazione_provincia' | 'denominazione_regione', selectedProvinces: string[]) {
+export async function generalPlot(
+                field: 'denominazione_provincia' | 'denominazione_regione',
+                selectedProvinces: string[],
+                data: (IProvince | IRegion)[] = null,
+                getY : ((p: IProvince | IRegion) => number)  = null
+) : Promise<IGeneralPlot> {
+
+    if (data == null)
+        data = Provinces
 
     const plots = []
 
@@ -134,14 +145,14 @@ export async function generalPlot(field: 'denominazione_provincia' | 'denominazi
         const origProvName = _.upperFirst(prov)
         prov = prov.toLowerCase()
 
-        const plot_: any = plot(Provinces, p => filter(field, prov,p), origProvName, 'scatter')
+        const plot_: any = plot(data, p => filter(field, prov,p), origProvName, 'scatter', getY)
         allPlots.push(plot_)
         trackOptions[columns[i + 1].label] = { color: colors[ci] }
 
         i++
 
         const velPlot: any =
-            plotVelocity(Provinces, p => filter(field, prov, p), "velocita' " + origProvName, 'scatter')
+            plotVelocity(data, p => filter(field, prov, p), "velocita' " + origProvName, 'scatter', getY)
         allVelPlots.push(velPlot)
         trackOptions[columns[i + 1].label] = { color: colors[ci], strokePattern: [10, 2, 5, 2] }
 
@@ -178,18 +189,36 @@ export async function generalPlot(field: 'denominazione_provincia' | 'denominazi
 
 export interface IGeneralPlot {
     data: any[], // gviz format
-    options: { ["citta"]: { color: string, strokePattern?: number[] } }
+    options: { [key: string]: { color: string, strokePattern?: number[] } }
 }
 
 /*
     selectedProvincesLength: numero di province/regioni nel plot basePlot,
-    basePlot: l'output di generalPlot,
-    grPlot: l'output di generalPlotGrowthRate,
     startDate: data da cui iniziare la proiezione
  */
 export async function projectGeneralPlot(
-    selectedProvincesLength: number,
-    basePlot: IGeneralPlot, growthRatePlot: IGeneralPlot, startDate: Date = null) {
+    field: 'denominazione_provincia' | 'denominazione_regione',
+    selectedRegions: string[],
+    startDate: Date = null) {
+
+    await initProvinces()
+    await initRegions()
+
+    const italia = selectedRegions.find(r => r.toLowerCase() == "italia")
+
+    if (field == 'denominazione_provincia') {
+
+        selectedRegions = provincesToRegions(selectedRegions)
+
+        if (italia)
+            selectedRegions.push(italia)
+    }
+
+    const genPlot : IGeneralPlot = await generalPlot('denominazione_regione', selectedRegions)
+    const growthRatePlot : IGeneralPlot = await generalPlotGrowthRate("denominazione_regione", selectedRegions)
+    const totalePositiviPlot : IGeneralPlot = await generalPlot('denominazione_regione', selectedRegions, Regions, (p : IRegion) => p.totale_positivi)
+    const basePlot = genPlot
+    const selectedProvincesLength = selectedRegions.length
 
     let latestDate = basePlot.data.slice(-1)[0][0]
     let startIdx
@@ -205,13 +234,51 @@ export async function projectGeneralPlot(
             startIdx  = di
         }
     } else {
-        startDate = latestDate
-        startIdx = -1
+       const getAvg = (data) => {
+            const avg = _.range(0, data[1].length - 1).map(a => null)
+            for (let j = 1; j < data[1].length; j++) {
+             let averaged = 0
+             for(let i = 1; i < data.length; i++) {
+                   if (!_.isFinite(data[i][j]))
+                     continue
+                   avg[j] += data[i][j]
+                   averaged++
+             }
+             avg[j] /= averaged
+            }
+            return average(avg.filter(_.isFinite))
+        }
+        const getNearestIdx = (data, y) => {
+            let md = +Infinity
+            let mi = -1
+            for (let j = 1; j < data[1].length; j++) {
+             for(let i = 1; i < data.length; i++) {
+                 if (!_.isFinite(data[i][j]))
+                     continue
+                 if (Math.abs(data[i][j]-y) < md) {
+                     md = Math.abs(data[i][j]-y)
+                     mi = i
+                 }
+             }
+            }
+            return {i: mi, y: md}
+        }
+        const D = growthRatePlot.data
+        const ni = getNearestIdx(D, getAvg(D))
+        if (ni.i >= 0) {
+            startDate = D[ni.i][0]
+            startIdx = ni.i
+        } else {
+            startDate = latestDate 
+            startIdx = -1
+        }
     }
     const columns = 2 * selectedProvincesLength + 1
+
     const projection = plotProjection(
         columns,
-        basePlot.data,
+        genPlot.data,
+        totalePositiviPlot.data,
         growthRatePlot.data.slice(startIdx)[0].slice(1), // growth rates of each plot, at date startDate
         startDate,
         Math.max(moment(latestDate).diff(startDate, 'days'), 30)
@@ -222,13 +289,33 @@ export async function projectGeneralPlot(
     )
     const newRows = projection
 
+    const getMax = (data) => {
+        const maxYs = data[0].map((a,i) =>
+                        i == 0 ? 0 : max2(data.map((r,j) => j == 0 ? 0 : r[i]).filter(_.isFinite)).max)
+        const maxY = Math.max(...maxYs)
+        return maxY
+    }
+
+    const data = [basePlot.data[0].concat(projColumns)].concat(newRows)
+
+    const dataMax = getMax(basePlot.data)
+    const projDataMax = getMax(data)
+    const safeMax = projDataMax > dataMax ? Math.min(4*dataMax, projDataMax) : dataMax
+
     return {
         options: Object.assign(
                     _.mapValues(basePlot.options, (v, k, i) => { (/velocit/i.test(k) ? delete v.strokePattern : ''); return v; }), 
                     _.mapValues(
                         _.mapKeys(basePlot.options, (v, k, i) => "pro. " + k),
                         o => Object.assign({}, o, { strokePattern: [10, 2, 5, 2] }))),
-        data: [basePlot.data[0].concat(projColumns)].concat(newRows)
+        data,
+        startDate,
+        startIdx,
+        gr: growthRatePlot.data.slice(startIdx)[0].slice(1, -1),
+        safeMax,
+        series: growthRatePlot.data[0].slice(1, -1).map(c => c.label),
+        maxDate: basePlot.data.slice(-1)[0][0]
+
     }
 }
 
@@ -306,6 +393,9 @@ export async function generalPlotGrowthRate(field: 'denominazione_provincia' | '
 }
 
 export function plot(Provinces: IProvince[], filter: (p: IProvince) => boolean, name: string, plotType: 'scatter', getY = (p) => p.totale_casi) {
+
+    if (getY == null)
+        getY = (p) => p.totale_casi
 
     const map = new Map<string, number>()
 
@@ -392,6 +482,7 @@ const oneDayMs = moment.duration(1, 'days').asMilliseconds()
 function plotProjection(
     columns: number, // how many columns
     realPlots: (number | Date)[][], // all plots, in gviz format.
+    totalePositiviPlot: (number | Date)[][],
     growthRates: number[],
     startDate: Date,
     days: number) {
@@ -405,7 +496,7 @@ function plotProjection(
 
     let I0: number[] = v < 0 ?
         _.range(0, columns).map((v, i) => i % 2 == 1 ? 0 : 1) : // Initial vector with 1 infected person per province/region and velocity 0
-        (realPlots[v] as number[]).slice() // Initial vector from day 'startDate'
+        (totalePositiviPlot[v] as number[]).slice() // Initial vector from day 'startDate'
 
     const nullRow = _.range(0, columns - 1).map(a => null)
 
@@ -432,15 +523,16 @@ function plotProjection(
 
             const gj = Math.floor(j / 2)
 
+            const prevI = i > v + 1 ? realPlots[i-1][j] as number : I0[j]
+
             // velocity = I(t) - I(t-1) = p * I(t-1) = (r-1) * I(t-1)
             // or if you want, you may find it by:
             //   velocity = I(t) - I(t-1) = r**t * I0 - r**(t-1) * I0 = r**(t-1) * I0 * (r-1) = I(t-1) * (r-1)
             realPlots[i][j + 1] =
                 growthRates[gj] >= 1 ? 
-                (realPlots[i - 1][j] as number) * (growthRates[gj] - 1) :
-                null // the decrease in velocity is not projected
+                    prevI * (growthRates[gj] - 1) :
+                    null // the decrease in velocity is not projected
 
-            const prevI = i > 0 ? realPlots[i-1][j] as number : I0[j]
             const vel = realPlots[i][j + 1] as number
             realPlots[i][j] = prevI + vel
         }

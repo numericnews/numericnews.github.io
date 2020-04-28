@@ -47,22 +47,17 @@ async function main() {
 
     await initProvinces()
 
-    const {options, data} = await testsPlot(field as any, selectedProvinces, 0)
-    console.log(`var options = ${JSON.stringify(options)};`)
-    console.log(`var plot = ${JSON.stringify(data)};`)
-
-    //    const {options, data} = await maxVelocityPlot(field as any)
+    //    const {options, data} = await testsPlot(field as any, selectedProvinces, 0)
+    //    console.log(`var options = ${JSON.stringify(options)};`)
+    //    console.log(`var plot = ${JSON.stringify(data)};`)
 
 //    const {options,data} = await generalPlot(field as any, selectedProvinces)
-    //console.log(`var options = ${JSON.stringify(options)};`)
-    //console.log(`var plot = ${JSON.stringify(data)};`)
-//    const grPlot = await generalPlotGrowthRate(field as any, selectedProvinces)
-//        const projPlot = await projectGeneralPlot(selectedProvinces.length, {options, data} as any, grPlot as any, new Date("2020-03-17"))
-//        console.log(`var options = ${JSON.stringify(projPlot.options)};`)
-//        console.log(`var plot = ${JSON.stringify(projPlot.data)};`)
+//    console.log(`var options = ${JSON.stringify(options)};`)
+//    console.log(`var plot = ${JSON.stringify(data)};`)
 //
-    //console.log(`var growthRateOptions = ${JSON.stringify(grPlot.options)};`)
-    //console.log(`var growthRatePlot = ${JSON.stringify(grPlot.data)};`)
+     const projPlot = await projectGeneralPlot(field as any, selectedProvinces, new Date("2020-03-14"))
+     console.log(`var options = ${JSON.stringify(projPlot.options)};`)
+     console.log(`var plot = ${JSON.stringify(projPlot.data)};`)
 
 
 }

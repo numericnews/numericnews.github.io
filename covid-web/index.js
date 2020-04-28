@@ -1,7 +1,6 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const totaleCasi_1 = require("./totaleCasi");
 const provinces_1 = require("./provinces");
-const tamponi_1 = require("./tamponi");
 async function main() {
     const field = process.argv[2];
     if (field == "list-provinces") {
@@ -21,9 +20,9 @@ async function main() {
     if (!["denominazione_provincia", "denominazione_regione"].includes(field))
         throw new Error("Wrong field");
     await provinces_1.init();
-    const { options, data } = await tamponi_1.testsPlot(field, selectedProvinces, 0);
-    console.log(`var options = ${JSON.stringify(options)};`);
-    console.log(`var plot = ${JSON.stringify(data)};`);
+    const projPlot = await totaleCasi_1.projectGeneralPlot(field, selectedProvinces, new Date("2020-03-14"));
+    console.log(`var options = ${JSON.stringify(projPlot.options)};`);
+    console.log(`var plot = ${JSON.stringify(projPlot.data)};`);
 }
 main()
     .then(a => 0)
