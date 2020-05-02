@@ -37,4 +37,16 @@ index.ts e index.sh
 
 Utilizzati per testare il codice in maniera spicciola. 
 
+plot() e plotVelocity()
+-----------------------
 
+Queste sono le funzioni interne principali.  
+Prendono in input 1. la lista dei dati json delle province (ma va bene anche quella delle regioni), 2. una funzione filter(), 3. 'name' e 'plotType' che al momento non servono (prima servivano per la libreria plotly) e 4. una funzione getY().  
+
+plot() fa lo storico, plotVelocity() lo storico della velocita'.  
+
+Entrambe scansionano la lista dei dati json e tramite la funzione filter() prendono gli elementi della lista che soddisfano la funzione filter. Ad esempio, con filter = p => p["denominazione\_provincia"].toLowerCase() == "roma", verrano considerati solo i dati riguardanti Roma. Invece, con filter = p => p["denominazione\_regione"].toLowerCase() == "sicilia" verranno considerati i dati di tutte le province della regione Sicilia.  
+Nel secondo esempio (Sicilia), per una stesso giorno, ci saranno piu' dati, quindi la funzione plot() usa una mappa per aggregarli e poi, se ad esempio, era di interessa il "totale\_casi", somma tutti i totale\_casi trovati in quel giorno e lo restituisce come output di quel giorno. Cosi', quandi si fa il plot delle regioni, plot() nel giorno X, per la regione R, dara' come Y la somma dei totale\_casi di tutte le province di R.  
+Infine, la funzione getY() serve per considerare altri campi dei dati Json. Di default, plot() prende "totale\_casi", con getY() si possono prendere altri campi, come "tamponi" o "casi\_testati".
+
+plotVelocity() fa' prima un plot(), ottenendo pX e pY, e poi restituisce {x,y}, dove y[i] c'e' pY[i] - pY[i-1]. Cioe', c'e' l'incremento che c'e' stato da pY[i-1] a pY[i]. Questa e' una velocita', se si considera che il tempo che intercorre tra il punto in i-1 e in i e' di un giorno.  
