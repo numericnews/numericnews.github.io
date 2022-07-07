@@ -13,7 +13,7 @@
     "axios": "^0.19.2",
     "dygraphs": "https://github.com/Alpt/dygraphs.git#v0.0.5",
     "lodash": "^4.17.15",
-    "moment": "^2.24.0",
+    "moment": "^2.29.4",
     "percentile": "^1.2.3",
     "randomcolor": "^0.5.4"
   },
