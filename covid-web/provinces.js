@@ -3,7 +3,7 @@ const download_data_1 = require("./download-data");
 const utils_1 = require("./utils");
 const moment = require("moment");
 exports.Provinces = [];
-const url = "https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-json/dpc-covid19-ita-province.json";
+const url = "https://raw.githubusercontent.com/numericnews/numericnews.github.io/master/covid-web/dist/dpc-covid19-ita-province.json";
 const downloadData = new download_data_1.DownloadData(exports.Provinces, url, p => true, async () => {
     exports.Provinces.sort((a, b) => moment(a.data).diff(moment(b.data), 'seconds'));
 });
