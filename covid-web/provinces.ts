@@ -4,7 +4,7 @@ import * as moment from 'moment'
 
 export let Provinces = []
 
-const url = "https://raw.githubusercontent.com/pcm-dpc/COVID-19/master/dati-json/dpc-covid19-ita-province.json"
+const url = "https://raw.githubusercontent.com/numericnews/numericnews.github.io/master/covid-web/dist/dpc-covid19-ita-province.json"
 
 const downloadData = new DownloadData(
     Provinces,
